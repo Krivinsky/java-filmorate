@@ -17,26 +17,22 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
     protected int generateId = 0;
     private final Map<Integer, User> users = new HashMap<>();
-
     private int generateId() {
         return ++generateId;
     }
 
-    //создание пользователя
     @PostMapping
-    public User create(@Valid @RequestBody User user) throws UserExeption {
+    public User create(@Valid @RequestBody User user) throws UserExeption { //создание пользователя
         userValidate(user);
-        user.setId(1);
+        user.setId(generateId());
         users.put(user.getId(), user);
         log.info("Создан новый пользователь");
         return user;
     }
 
-    //обновление пользователя
-    @PutMapping User update (@Valid @RequestBody User user) throws UserExeption {
+    @PutMapping User update (@Valid @RequestBody User user) throws UserExeption { //обновление пользователя
         //userValidate(user);
         if (user.getId() > 0) {
             users.put(user.getId(), user);
