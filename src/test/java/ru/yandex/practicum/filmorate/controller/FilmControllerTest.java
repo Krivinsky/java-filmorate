@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exeption.FilmExeption;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
@@ -11,6 +13,7 @@ class FilmControllerTest {
     @Test
     void add() {
         Film film = new Film();
+        film.setReleaseDate(LocalDate.of(1795,1,1));
 
         final FilmExeption ex = assertThrows(
                 FilmExeption.class,
@@ -18,7 +21,7 @@ class FilmControllerTest {
                     FilmController filmController = new FilmController();
                     filmController.add(film);
                 });
-        assertEquals("Ошибка в названии фильма", ex.getMessage());
+        assertEquals("Ошибка в дате релиза фильма", ex.getMessage());
     }
 
     @Test
