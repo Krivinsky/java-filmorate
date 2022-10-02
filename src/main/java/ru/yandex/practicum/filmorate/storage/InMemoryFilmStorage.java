@@ -1,16 +1,15 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Slf4j
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     final static int MAX_NAME_SIZE = 200;
@@ -69,21 +68,23 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film findById(int id) {
-
         return films.get(id);
     }
 
     public List<Film> topFilms(int count) {
-        List<Film> sorted = new ArrayList<>(findAllFilms());
-        Film topFilm = sorted.get(0);
-        for (int i = 0; i < sorted.size(); i++) {
-            if(sorted.get(i).getLikes().size() > topFilm.getLikes().size()) {
-                sorted.add(0,sorted.get(i));
-            }
+        Collection<Film> allFilmsCollection = films.values();
+        List<Film> allFilms = new ArrayList<>(allFilmsCollection);
+
+        FilmComparator filmComparator = new FilmComparator();
+        allFilms.sort(filmComparator);
+
+        return allFilms;
+    }
+
+    static class FilmComparator implements Comparator<Film> {
+        @Override
+        public int compare (Film film1, Film film2) {
+            return film2.getRate()  - film1.getRate();
         }
-        if (count < sorted.size()) {
-            return sorted.subList(0,count);
-        }
-        return sorted;
     }
 }
