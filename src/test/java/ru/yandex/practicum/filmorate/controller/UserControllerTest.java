@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exeption.UserException;
+import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
@@ -20,11 +21,12 @@ class UserControllerTest {
         user.setLogin("login");
         user.setName("name");
         user.setBirthday(LocalDate.of(2000, 1,1));
+
         InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
         UserService userService = new UserService(inMemoryUserStorage);
 
-        final UserException ex = assertThrows(
-                UserException.class,
+        final ValidationException ex = assertThrows(
+                ValidationException.class,
                 () -> {
                     UserController userController = new UserController(userService);
                     userController.create(user);
