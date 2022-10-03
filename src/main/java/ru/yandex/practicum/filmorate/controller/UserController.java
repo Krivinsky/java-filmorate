@@ -40,7 +40,7 @@ public class UserController {
             log.info("Обновлен пользователь " + user.getName());
             return user;
         }
-        throw new ValidationException("Нет такого ID пользователя");
+        throw new ValidationException("Нет пользователя с таким ID");
     }
 
     @GetMapping
@@ -51,8 +51,12 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User findById(@PathVariable int id) throws NotFoundException {
+        User user = userService.findById(id);
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("Нет пользователя с таким ID");
+        }
         log.info("Получен пользователь " + id);
-        return userService.findById(id);
+        return user;
     }
 
     @PutMapping("/{id}/friends/{friendId}")  //добавление в друзья
