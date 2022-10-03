@@ -33,7 +33,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User update(User user) throws ValidationException, NotFoundException {
         userValidate(user);
-        if (user.getId() > 0) {
+        if (user.getId() > 0 && user.getId() <= generateId) {
             users.put(user.getId(), user);
             return user;
         }

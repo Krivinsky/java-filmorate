@@ -33,7 +33,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film update(Film film) throws ValidationException, NotFoundException {
         filmValidate(film);
-        if (film.getId() > 0) {
+        if (film.getId() > 0 && film.getId() <= generateId) {
             films.put(film.getId(), film);
             return film;
         }
