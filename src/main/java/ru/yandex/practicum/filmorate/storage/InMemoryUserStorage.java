@@ -69,9 +69,11 @@ public class InMemoryUserStorage implements UserStorage {
                 throw new ValidationException("Ошибка в дате рождения пользователя");
             }
     }
-
-
-    public User findById(int userId) {
+    public User findById(int userId) throws NotFoundException {
+        if (userId < 0 || generateId < userId) {
+            throw new NotFoundException("Пользователь с " + userId + " не найден");
+        }
         return users.get(userId);
     }
+
 }

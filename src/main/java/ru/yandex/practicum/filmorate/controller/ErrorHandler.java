@@ -17,20 +17,20 @@ public class ErrorHandler {
     @ResponseStatus (HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(final ValidationException e) {
         log.info("400 {}", e.getMessage());
-        return new ErrorResponse("Ошибка валидации" + e.getMessage());
+        return new ErrorResponse("Ошибка валидации",  e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus (HttpStatus.NOT_FOUND)
     public ErrorResponse handleObjectNotFoundException(final NotFoundException e) {
         log.info("404 {}", e.getMessage());
-        return new ErrorResponse ("Объект не найден" + e.getMessage());
+        return new ErrorResponse ("Объект не найден",  e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus (HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleThrowable (final Throwable e) {
         log.info("500 {}", e.getMessage(), e);
-        return new ErrorResponse("Возникло исключение" + e.getMessage());
+        return new ErrorResponse("Возникло исключение", "Ошибка входных данных" );
     }
 }

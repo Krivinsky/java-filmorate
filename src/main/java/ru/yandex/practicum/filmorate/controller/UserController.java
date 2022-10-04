@@ -1,17 +1,14 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
-import ru.yandex.practicum.filmorate.exeption.UserException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -66,17 +63,18 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")   //удаление из друзей
-    public void deleteFriend(@PathVariable int id, @PathVariable int friendId) {
+    public void deleteFriend(@PathVariable int id, @PathVariable int friendId) throws NotFoundException {
         userService.deleteFriend(id, friendId);
     }
 
     @GetMapping("/{id}/friends")    //список пользователей, являющихся его друзьями
     public List<User> getFriends(@PathVariable int id) throws NotFoundException {
+        log.info("список друзей пользователя " + id + userService.getFriends(id));
         return userService.getFriends(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}") // список друзей, общих с другим пользователем
-    public List<User> getMutualFriends(@PathVariable int id, @PathVariable int otherId) {
+    public List<User> getMutualFriends(@PathVariable int id, @PathVariable int otherId) throws NotFoundException {
         return userService.getMutualFriends(id, otherId);
     }
 }

@@ -29,13 +29,13 @@ public class UserService {
     }
 
     //удаление из друзей
-    public void deleteFriend(int userId, int friendId) {
+    public void deleteFriend(int userId, int friendId) throws NotFoundException {
         userStorage.findById(userId).getFriends().remove(friendId);
         userStorage.findById(friendId).getFriends().remove(userId);
     }
 
     //вывод списка общих друзей
-    public List<User> getMutualFriends(int id, int otherId) {
+    public List<User> getMutualFriends(int id, int otherId) throws NotFoundException {
         List<User> result = new ArrayList<>();
         User user1 = userStorage.findById(id);
         User user2 = userStorage.findById(otherId);

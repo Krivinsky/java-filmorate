@@ -13,5 +13,5 @@ public interface UserStorage {
     void deleteUser(Integer userId);
     Collection<User> findAllUsers();
     void userValidate(User user) throws UserException, ValidationException;
-    User findById(int userId);
+    User findById(int userId) throws NotFoundException;
 }

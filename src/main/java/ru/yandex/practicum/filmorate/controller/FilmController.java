@@ -29,14 +29,14 @@ public class FilmController {
 
     @PostMapping("/films")
     public Film add(@Valid @RequestBody final Film film) throws FilmException, ValidationException { //добавление фильма
-        filmService.filmStorage.add(film);
+        filmService.add(film);
         log.info("Добавлен новый фильм " + film.getName() + " в коллекцию");
         return film;
     }
 
     @PutMapping("/films")
     public Film update(@Valid @RequestBody final Film film) throws FilmException, ValidationException, NotFoundException { //обновление фильма
-        filmService.filmStorage.update(film);
+        filmService.update(film);
         log.info("Обновлен фильм " + film.getName());
         return film;
     }
@@ -44,12 +44,12 @@ public class FilmController {
     @GetMapping("/films")
     public List<Film> findAllFilms() { // получение всех фильмов
         log.info("Отправлен список всех фильмов");
-        return filmService.filmStorage.findAllFilms();
+        return filmService.findAllFilms();
     }
 
     @GetMapping("/films/{id}")
     public Film get(@PathVariable Integer id) throws NotFoundException {
-        Film film = filmService.filmStorage.findById(id);
+        Film film = filmService.findById(id);
         if (Objects.nonNull(film)) {
             log.info("Получен фильм " + id);
             return film;
@@ -61,14 +61,14 @@ public class FilmController {
 
     @PutMapping("/films/{id}/like/{userId}")    // пользователь ставит лайк фильму
     public void addLike (@PathVariable int id, @PathVariable int userId) {
-        Film film = filmService.filmStorage.findById(id);
+        Film film = filmService.findById(id);
         log.info("пользователь с " + userId + "поставил лайк фильму " + id);
         film.addLike(userId);
     }
 
     @DeleteMapping ("/films/{id}/like/{userId}")    //  пользователь удаляет лайк
     public void deleteLike(@PathVariable int id, @PathVariable int userId) throws NotFoundException {
-        Film film = filmService.filmStorage.findById(id);
+        Film film = filmService.findById(id);
         if (Objects.isNull(film)) {
             throw new NotFoundException("Такого фильма не существует");
         }
