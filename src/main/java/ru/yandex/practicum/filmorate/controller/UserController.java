@@ -1,70 +1,80 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exeption.UserExeption;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
+import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    protected int generateId = 0;
-    private final Map<Integer, User> users = new HashMap<>();
-    private int generateId() {
-        return ++generateId;
+    private final UserService userService;
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping
-    public User create(@Valid @RequestBody User user) throws UserExeption { //создание пользователя
-        userValidate(user);
-        user.setId(generateId());
-        users.put(user.getId(), user);
-        log.info("Создан новый пользователь");
+    public User create(@Valid @RequestBody User user) throws ValidationException { //создание пользователя
+        userService.userStorage.creat(user);
+        log.info("Создан новый пользователь" + user.toString());
         return user;
     }
 
-    @PutMapping User update (@Valid @RequestBody User user) throws UserExeption { //обновление пользователя
-        //userValidate(user);
-        if (user.getId() > 0) {
-            users.put(user.getId(), user);
+    @PutMapping
+    User update (@Valid @RequestBody User user) throws ValidationException, NotFoundException { //обновление пользователя
+        userService.userStorage.update(user);
+        if (Objects.nonNull(user)) {
             log.info("Обновлен пользователь " + user.getName());
             return user;
         }
-        throw new UserExeption("Нет такого ID пользователя");
+        throw new ValidationException("Нет пользователя с таким ID");
     }
 
-    //получение списка всех пользователей
-    @GetMapping public Collection<User> findAllUsers() {
+    @GetMapping
+    public Collection<User> findAllUsers() {  //получение списка всех пользователей
         log.info("Отправлен список всех пользователей");
-        return users.values();
+        return userService.userStorage.findAllUsers();
     }
 
-    private void userValidate(@NonNull User user) throws UserExeption {
-        if (user.getEmail() == null || user.getEmail().isEmpty() || !user.getEmail().contains("@") ) {
-            log.error("Ошибка в электронной почте пользователя");
-            throw new UserExeption("Ошибка в электронной почте пользователя");
+    @GetMapping("/{id}")
+    public User findById(@PathVariable int id) throws NotFoundException {
+        User user = userService.findById(id);
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("Нет пользователя с таким ID");
         }
-        if (user.getLogin().isEmpty() || user.getLogin().contains(" ")) {
-            log.error("Ошибка в логине пользователя");
-            throw new UserExeption("Ошибка в логине пользователя");
-        }
-        if (user.getName() == null) {
-            user.setName(user.getLogin());
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.error("Ошибка в дате рождения пользователя");
-            throw new UserExeption("Ошибка в дате рождения пользователя");
-        }
+        log.info("Получен пользователь " + id);
+        return user;
+    }
 
+    @PutMapping("/{id}/friends/{friendId}")  //добавление в друзья
+    public void addFriend (@PathVariable int id, @PathVariable int friendId) throws NotFoundException {
+        log.info("Пользователь " + id + " добавил в друзья пользователя " + friendId);
+        userService.addFriend(id, friendId);
+    }
 
+    @DeleteMapping("/{id}/friends/{friendId}")   //удаление из друзей
+    public void deleteFriend(@PathVariable int id, @PathVariable int friendId) throws NotFoundException {
+        userService.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends")    //список пользователей, являющихся его друзьями
+    public List<User> getFriends(@PathVariable int id) throws NotFoundException {
+        log.info("список друзей пользователя " + id + userService.getFriends(id));
+        return userService.getFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}") // список друзей, общих с другим пользователем
+    public List<User> getMutualFriends(@PathVariable int id, @PathVariable int otherId) throws NotFoundException {
+        return userService.getMutualFriends(id, otherId);
     }
 }
