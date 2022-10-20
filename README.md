@@ -1,5 +1,6 @@
 # java-filmorate
 Template repository for Filmorate project.
 
-https://app.quickdatabasediagrams.com/#/d/KNxzC6
+![diagram](./src/main/resources/QuickDBD-filmorate.png)
+
 
