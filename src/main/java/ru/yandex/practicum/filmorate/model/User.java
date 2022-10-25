@@ -14,7 +14,7 @@ import java.util.Set;
 @Data
 public class User {
 
-    int id;
+    int user_id;
 
     @Email
     private String email;
@@ -32,7 +32,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + id +
+                "userId=" + user_id +
                 ", name='" + name + '\'' +
                 '}';
     }

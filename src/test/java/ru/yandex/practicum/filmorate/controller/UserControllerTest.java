@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.exeption.UserException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -17,7 +16,7 @@ class UserControllerTest {
     @Test
     void create() {
         User user = new User();
-        user.setId(1);
+        user.setUser_id(1);
         user.setLogin("login");
         user.setName("name");
         user.setBirthday(LocalDate.of(2000, 1,1));

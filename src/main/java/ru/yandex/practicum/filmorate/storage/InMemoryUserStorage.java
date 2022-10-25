@@ -25,16 +25,16 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User creat(User user) throws ValidationException {
         userValidate(user);
-        user.setId(generateId());
-        users.put(user.getId(), user);
+        user.setUser_id(generateId());
+        users.put(user.getUser_id(), user);
         return user;
     }
 
     @Override
     public User update(User user) throws ValidationException, NotFoundException {
         userValidate(user);
-        if (user.getId() > 0 && user.getId() <= generateId) {
-            users.put(user.getId(), user);
+        if (user.getUser_id() > 0 && user.getUser_id() <= generateId) {
+            users.put(user.getUser_id(), user);
             return user;
         }
         throw new NotFoundException("Такого пользователя не существует");
