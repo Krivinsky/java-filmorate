@@ -13,7 +13,7 @@ import java.util.Map;
 
 
 @Slf4j
-@Component
+//@Component
 public class InMemoryUserStorage implements UserStorage {
 
     protected int generateId = 0;

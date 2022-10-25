@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
@@ -12,12 +13,14 @@ import java.util.Objects;
 
 @Service
 public class UserService {
+
     public UserStorage userStorage;
 
     @Autowired
     public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
     }
+
 
     //добавление в друзья
     public void addFriend(Integer id, Integer friendId) throws NotFoundException {
