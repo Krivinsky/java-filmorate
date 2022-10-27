@@ -52,7 +52,7 @@ public class UserController {
         if (Objects.isNull(user)) {
             throw new NotFoundException("Нет пользователя с таким ID");
         }
-        log.info("Получен пользователь " + id);
+        log.info("Получен пользователь : {} {} {}", user.getUser_id(), user.getEmail(), user.getLogin());
         return user;
     }
 
