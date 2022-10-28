@@ -29,13 +29,16 @@ public class FriendshipDbStorage implements FriendshipStorage {
 
     @Override
     public List<User> getFriends(int userId) {
-        String sqlQuery = "";
-        jdbcTemplate.query(sqlQuery, );
+        String sqlQuery = "SELECT * FROM USERS, FRIENDSHIP WHERE USER_ID = FRIENDSHIP.FRIEND_ID AND FRIENDSHIP.USER_ID = ?";
+        List<User> result = jdbcTemplate.query(sqlQuery,  UserDbStorage::creat, userId); //todo
         return null;
     }
 
     @Override
     public List<User> getCommonFriends(int userId, int otherId) {
+        String sqlQuery = "select * from USERS U, FRIENDSHIP F, FRIENDSHIP O " +
+                "WHERE U.USER_ID = F.FRIEND_ID AND  U.USER_ID = O.FRIEND_ID AND F.FRIEND_ID = ? AND O.USER_ID = ?";
+        List<User> result = jdbcTemplate.query(sqlQuery, UserDbStorage::creat, userId, otherId); //todo
         return null;
     }
 }
