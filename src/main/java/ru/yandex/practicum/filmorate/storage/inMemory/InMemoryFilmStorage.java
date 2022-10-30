@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
-@Component
+//@Component
 public class InMemoryFilmStorage implements FilmStorage {
     final static int MAX_NAME_SIZE = 200;
 
@@ -26,17 +26,17 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film add(Film film) throws ValidationException {
         filmValidate(film);
-        film.setId(generateId());
-        films.put(film.getId(), film);
+        film.setFilm_id(generateId());
+        films.put(film.getFilm_id(), film);
         return film;
     }
 
-    @Override
-    public Film update(Film film) throws ValidationException, NotFoundException {
+//    @Override
+    public void update(Film film) throws ValidationException, NotFoundException {
         filmValidate(film);
-        if (film.getId() > 0 && film.getId() <= generateId) {
-            films.put(film.getId(), film);
-            return film;
+        if (film.getFilm_id() > 0 && film.getFilm_id() <= generateId) {
+            films.put(film.getFilm_id(), film);
+            //return film;
         }
         throw new NotFoundException("Такого фильма не существует");
     }
@@ -47,7 +47,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> findAllFilms() {
+    public List<Film> getAllFilms() {
         return new ArrayList<>(films.values());
     }
 
@@ -56,7 +56,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (film.getReleaseDate().isBefore(DATE_OF_FIRST_FILM)) {
             throw new ValidationException("Ошибка в дате релиза фильма");
         }
-        if (film.getName() == null || film.getName().isEmpty()) {
+        if (film.getTitle() == null || film.getTitle().isEmpty()) {
             throw new ValidationException("Ошибка в названии фильма");
         }
         if (film.getDescription() != null && film.getDescription().length() > MAX_NAME_SIZE) {
@@ -72,6 +72,11 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.get(id);
     }
 
+    @Override
+    public Film get(int filmId) throws NotFoundException {
+        return null;
+    }
+
     public List<Film> topFilms(int count) {
         Collection<Film> allFilmsCollection = films.values();
         List<Film> allFilms = new ArrayList<>(allFilmsCollection);
@@ -80,6 +85,11 @@ public class InMemoryFilmStorage implements FilmStorage {
         allFilms.sort(filmComparator);
 
         return allFilms;
+    }
+
+    @Override
+    public Film save(Film film) {
+        return null;
     }
 
     static class FilmComparator implements Comparator<Film> {

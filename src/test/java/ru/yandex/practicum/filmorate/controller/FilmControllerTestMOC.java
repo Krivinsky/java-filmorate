@@ -36,7 +36,7 @@ public class FilmControllerTestMOC {
     }
 
     @Test
-    void add() throws Exception {
+    void create() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(getContentFromFile("controller/create/request/film.json"))

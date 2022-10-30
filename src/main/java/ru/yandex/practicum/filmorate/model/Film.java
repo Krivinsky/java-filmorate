@@ -30,18 +30,27 @@ public class Film {
     LocalDate releaseDate;
 
     @Min(1)
-    long duration;
+    int duration;
 
     @JsonIgnore
     int rate;
 
-    String mpa_rating;
+    Mpa mpa;
+
+    public Set<Genre> genres;
 
     public Film() {
-
     }
 
-
+    public Film(int film_id, String title, String description, LocalDate releaseDate, int duration, int rate, Mpa mpa) {
+        this.film_id = film_id;
+        this.title = title;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.rate = rate;
+        this.mpa = mpa;
+    }
 
     public int getFilm_id() {
         return film_id;
@@ -75,11 +84,11 @@ public class Film {
         this.releaseDate = releaseDate;
     }
 
-    public long getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(long duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
@@ -91,12 +100,14 @@ public class Film {
         this.rate = rate;
     }
 
-    public String getMpa_rating() {
-        return mpa_rating;
+    public Mpa getMpa() {
+        return mpa;
     }
 
-    public void setMpa_rating(String mpa_rating) {
-        this.mpa_rating = mpa_rating;
+
+
+    public void setMpa(Mpa mpa) {
+        this.mpa = mpa;
     }
 
     @JsonIgnore
@@ -112,5 +123,13 @@ public class Film {
     public void deleteLike(Integer userId) {
         likes.remove(userId);
         rate = likes.size();
+    }
+
+    public Set<Genre> getGenres() {
+        return genres;
+    }
+
+    public void addGenre(Genre genre) {
+        genres.add(genre);
     }
 }

@@ -23,15 +23,17 @@ public class LikesDbStorage implements LikesStorage {
     }
 
     @Override
-    public void removeLike(int filmId, int userId) { //todo
+    public void removeLike(int filmId, int userId) {
         String sqlQuery = "DELETE FROM LIKES WHERE FILM_ID = ? AND USER_ID = ?";
         jdbcTemplate.update(sqlQuery, filmId, userId);
         updateRate(filmId);
     }
 
     @Override
-    public List<Film> getPopular(int count) {  //todo
-        return null;
+    public List<Film> getPopular(int count) {
+        final String sqlQuery = "SELECT * FROM FILMS F, MPA M WHERE F.MPA_ID = M.MPA_ID ORDER BY RATE DESC LIMIT ?";
+        List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm, count);
+        return films;
     }
 
     public void updateRate(int filmId) {
@@ -39,6 +41,4 @@ public class LikesDbStorage implements LikesStorage {
                 "WHERE L.FILM_ID = F.FILM_ID) WHERE F.FILM_ID = ?";
         jdbcTemplate.update(sqlQuery, filmId);
     }
-
-    //todo проверить нет ли тут кода на -17 минуте
 }

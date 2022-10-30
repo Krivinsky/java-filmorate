@@ -14,7 +14,7 @@ import java.util.Set;
 @Data
 public class User {
 
-    int user_id;
+    int id;
 
     @Email
     private String email;
@@ -26,22 +26,25 @@ public class User {
 
     private LocalDate birthday;
 
-    public User(int user_id, String email, String login, String name, LocalDate birthday) {
-        this.user_id = user_id;
+    public User(int id, String email, String login, String name, LocalDate birthday) {
+        this.id = id;
         this.email = email;
         this.login = login;
         this.name = name;
         this.birthday = birthday;
     }
 
+    public User() {
 
-
-    public int getUser_id() {
-        return user_id;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -82,7 +85,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + user_id +
+                "userId=" + id +
                 ", name='" + name + '\'' +
                 '}';
     }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
@@ -12,28 +13,31 @@ import java.util.Objects;
 
 @Service
 public class UserService {
-
+    public FriendshipStorage friendshipStorage;
     public UserStorage userStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(UserStorage userStorage, FriendshipStorage friendshipStorage) {
         this.userStorage = userStorage;
+        this.friendshipStorage = friendshipStorage;
     }
 
 
     //добавление в друзья
-    public void addFriend(Integer id, Integer friendId) throws NotFoundException {
-        User userId = findById(id);
-        User userFriendId = findById(friendId);
+    public void addFriend(int id, int friendId) throws NotFoundException {
+        final User userId = findById(id);
+        final User userFriendId = findById(friendId);
 
+        friendshipStorage.addFriend(userId.getId(), userFriendId.getId());
         userId.getFriends().add(friendId);
         userFriendId.getFriends().add(id);
     }
 
     //удаление из друзей
-    public void deleteFriend(int userId, int friendId) throws NotFoundException {
-        userStorage.findById(userId).getFriends().remove(friendId);
-        userStorage.findById(friendId).getFriends().remove(userId);
+    public void removeFriend(int id, int friendId) throws NotFoundException {
+        final User userId = findById(id);
+        final User userFriendId = findById(friendId);
+        friendshipStorage.removeFriend(userId.getId(), userFriendId.getId());
     }
 
     //вывод списка общих друзей
@@ -67,5 +71,11 @@ public class UserService {
             friends.add(findById(friendId));
         }
         return friends;
+    }
+
+
+
+    void validate(User user) {
+
     }
 }
