@@ -18,10 +18,10 @@ import java.util.Set;
 @AllArgsConstructor
 public class Film {
 
-    int film_id;
+    int id;
 
     @NotBlank
-    private String title;
+    private String name;
 
     @Size(min = 1, max = 200)
     private String description;
@@ -36,15 +36,15 @@ public class Film {
     int rate;
 
     Mpa mpa;
-
+    @JsonIgnore
     public Set<Genre> genres;
 
     public Film() {
     }
 
-    public Film(int film_id, String title, String description, LocalDate releaseDate, int duration, int rate, Mpa mpa) {
-        this.film_id = film_id;
-        this.title = title;
+    public Film(int id, String name, String description, LocalDate releaseDate, int duration, int rate, Mpa mpa) {
+        this.id = id;
+        this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
@@ -52,20 +52,20 @@ public class Film {
         this.mpa = mpa;
     }
 
-    public int getFilm_id() {
-        return film_id;
+    public int getId() {
+        return id;
     }
 
-    public void setFilm_id(int film_id) {
-        this.film_id = film_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -131,5 +131,18 @@ public class Film {
 
     public void addGenre(Genre genre) {
         genres.add(genre);
+    }
+
+
+    @Override
+    public String toString() {
+        return "Film{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", releaseDate=" + releaseDate +
+                ", duration=" + duration +
+                ", rate=" + rate +
+                '}';
     }
 }

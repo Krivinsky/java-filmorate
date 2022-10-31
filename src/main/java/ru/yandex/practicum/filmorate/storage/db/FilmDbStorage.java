@@ -42,8 +42,8 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public void update(Film film) {
         String sqlQuery = "UPDATE FILMS SET TITLE = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, RATE = ?, MPA_ID = ? WHERE FILM_ID = ?";
-        jdbcTemplate.update(sqlQuery, film.getTitle(), film.getDescription(), film.getReleaseDate(), film.getDuration(),
-                film.getRate(), film.getMpa().getMpa_id(), film.getFilm_id());
+        jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(),
+                film.getRate(), film.getMpa().getId(), film.getId());
         saveGenres(film);
     }
 
@@ -109,23 +109,26 @@ public class FilmDbStorage implements FilmStorage {
                 "VALUES (?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sqlQuery, new String[] {"id"});
-            statement.setString(1, film.getTitle());
+            PreparedStatement statement = connection.prepareStatement(sqlQuery, new String[] {"FILM_ID"});
+            statement.setString(1, film.getName());
             statement.setString(2, film.getDescription());
             statement.setDate(3, Date.valueOf(film.getReleaseDate()));
             statement.setInt(4,film.getDuration());
             statement.setInt(5, film.getRate());
-            statement.setInt(6, film.getMpa().getMpa_id());
+            statement.setInt(6, film.getMpa().getId());
             return statement;
         }, keyHolder);
-        film.setFilm_id(keyHolder.getKey().intValue());
+        film.setId(keyHolder.getKey().intValue());
 
-        saveGenres(film);
-        return get(film.getFilm_id());
+        System.out.println(film);
+
+        saveGenres(film); // удалить
+
+        return get(film.getId());
     }
 
     private void saveGenres(Film film) {
-        final Integer filmId = film.getFilm_id();
+        final Integer filmId = film.getId();
         jdbcTemplate.update("DELETE FROM FILM_GENRE WHERE FILM_ID = ?", filmId);
         final Set<Genre> genres = film.getGenres(); //todo сделать метод
         if (genres == null || genres.isEmpty()) {
@@ -149,6 +152,6 @@ public class FilmDbStorage implements FilmStorage {
 
 
     public static int getId(Film film) {
-        return film.getFilm_id();
+        return film.getId();
     }
 }

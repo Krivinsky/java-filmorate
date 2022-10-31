@@ -83,6 +83,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public Collection<User> getAllUsers() {
+
         return jdbcTemplate.query("SELECT * FROM PUBLIC.USERS", UserDbStorage::makeUser);
     }
 
@@ -106,13 +107,15 @@ public class UserDbStorage implements UserStorage {
     }
 
     public static User makeUser(ResultSet resultSet, int rowNum) throws SQLException {
-        return new User(
+        User user = new User(
             resultSet.getInt("USER_ID"),
             resultSet.getString("EMAIL"),
             resultSet.getString("LOGIN"),
             resultSet.getString("NAME"),
             resultSet.getDate("BIRTHDAY").toLocalDate()
         );
+        System.out.println(user);
+        return user;
     }
 
     @Override

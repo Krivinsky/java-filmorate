@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.inMemory;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -26,16 +25,16 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film add(Film film) throws ValidationException {
         filmValidate(film);
-        film.setFilm_id(generateId());
-        films.put(film.getFilm_id(), film);
+        film.setId(generateId());
+        films.put(film.getId(), film);
         return film;
     }
 
 //    @Override
     public void update(Film film) throws ValidationException, NotFoundException {
         filmValidate(film);
-        if (film.getFilm_id() > 0 && film.getFilm_id() <= generateId) {
-            films.put(film.getFilm_id(), film);
+        if (film.getId() > 0 && film.getId() <= generateId) {
+            films.put(film.getId(), film);
             //return film;
         }
         throw new NotFoundException("Такого фильма не существует");
@@ -56,7 +55,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (film.getReleaseDate().isBefore(DATE_OF_FIRST_FILM)) {
             throw new ValidationException("Ошибка в дате релиза фильма");
         }
-        if (film.getTitle() == null || film.getTitle().isEmpty()) {
+        if (film.getName() == null || film.getName().isEmpty()) {
             throw new ValidationException("Ошибка в названии фильма");
         }
         if (film.getDescription() != null && film.getDescription().length() > MAX_NAME_SIZE) {

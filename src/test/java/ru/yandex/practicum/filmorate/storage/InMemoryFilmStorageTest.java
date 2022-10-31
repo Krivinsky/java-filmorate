@@ -22,13 +22,13 @@ class InMemoryFilmStorageTest {
 
     @BeforeEach
     void setUp() {
-        film1.setFilm_id(1);
+        film1.setId(1);
         film1.setName("film1 Name");
         film1.setReleaseDate(LocalDate.of(2001,1,1));
         film1.setDescription("film1 Description");
         film1.setDuration(100);
 
-        film2.setFilm_id(2);
+        film2.setId(2);
         film2.setName("film2 Name");
         film2.setReleaseDate(LocalDate.of(2002,2,2));
         film2.setDescription("film12 Description");

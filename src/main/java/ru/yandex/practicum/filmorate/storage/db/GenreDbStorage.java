@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.db;
 
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
@@ -10,7 +9,6 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +24,7 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     @Override
-    public Genre get (int genreId) throws NotFoundException {
+    public Genre get(int genreId) throws NotFoundException {
         final String sqlQuery = "SELECT * FROM GENRES WHERE GENRE_ID = ?";
         final List<Genre> result = jdbcTemplate.query(sqlQuery, GenreDbStorage::makeGenre, genreId);
         if (result.size() != 1) {
@@ -45,7 +43,7 @@ public class GenreDbStorage implements GenreStorage {
     @Override
     public void load(List<Film> films) {
         String inSql = String.join(",", Collections.nCopies(films.size(), "?"));
-        final Map<Integer, Film> filmById = films.stream().collect(Collectors.toMap(Film::getFilm_id, Function.identity()));
+        final Map<Integer, Film> filmById = films.stream().collect(Collectors.toMap(Film::getId, Function.identity()));
         final String sqlQuery = "SELECT * FROM GENRES G, FILM_GENRE FG WHERE FG.GENRE_ID = G.GENRE_ID AND FG.FILM_ID " +
                 "IN (" + inSql + ")";
 

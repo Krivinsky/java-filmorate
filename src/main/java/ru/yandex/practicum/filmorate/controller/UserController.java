@@ -70,13 +70,16 @@ public class UserController {
 
     @GetMapping("/{id}/friends")    //список пользователей, являющихся его друзьями
     public List<User> getFriends(@PathVariable int id) throws NotFoundException {
-        log.info("список друзей пользователя " + id + userService.getFriends(id));
-        return userService.getFriends(id);
+        List<User> friends = userService.getFriends(id);
+        System.out.println(friends);
+        log.info("список друзей пользователя c ID=" + id + " : " + friends);
+        return friends;
     }
 
     @GetMapping("/{id}/friends/common/{otherId}") // список друзей, общих с другим пользователем
     public List<User> getMutualFriends(@PathVariable int id, @PathVariable int otherId) throws NotFoundException {
-        log.info("список друзей пользователя" + id + "с пользователем " + otherId);
-        return userService.getMutualFriends(id, otherId);
+        List<User> friends = userService.getMutualFriends(id, otherId);
+        log.info("список друзей пользователя c ID=" + id + " с пользователем c ID=" + otherId + " -- " + friends);
+        return friends;
     }
 }

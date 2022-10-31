@@ -20,7 +20,7 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public Mpa get(int mpaId) throws NotFoundException {
-        final String sqlQuery = "";
+        final String sqlQuery = "SELECT * FROM MPA WHERE MPA_ID = ?";
         final List<Mpa> mpas = jdbcTemplate.query(sqlQuery, MpaDbStorage::makeMpa, mpaId);
         if (mpas.size() != 1) {
             throw new NotFoundException("mpa_id = " + mpaId);
@@ -30,7 +30,7 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public List<Mpa> getAll() {
-        String sqlQuery = "SELECT * FROM FILMS";
+        String sqlQuery = "SELECT * FROM MPA";
         List<Mpa> mpas = jdbcTemplate.query(sqlQuery, MpaDbStorage::makeMpa);
         return mpas;
     }

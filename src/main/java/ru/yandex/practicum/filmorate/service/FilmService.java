@@ -45,7 +45,7 @@ public class FilmService {
     }
 
     public Film update(Film film) throws ValidationException, FilmException, NotFoundException {
-        final Film film1 = filmStorage.get(film.getFilm_id());
+        final Film film1 = filmStorage.get(film.getId());
         validate(film);
         film.setRate(film1.getRate());
         filmStorage.update(film);
@@ -59,13 +59,13 @@ public class FilmService {
     public void addLike(int filmId, int userId) throws NotFoundException {
         final Film film = filmStorage.get(filmId);
         final User user = userStorage.get(userId);
-        likesStorage.addLike(film.getFilm_id(), user.getId());
+        likesStorage.addLike(film.getId(), user.getId());
     }
 
     public void deleteLike(int filmId, int userId) throws NotFoundException {
         final Film film = filmStorage.get(filmId);
         final User user = userStorage.get(userId);
-        likesStorage.removeLike(film.getFilm_id(), user.getId());
+        likesStorage.removeLike(film.getId(), user.getId());
     }
 
     public List<Film> getPopular(int count) {

@@ -4,27 +4,27 @@ import lombok.Data;
 
 @Data
 public class Mpa {
-    int mpa_id;
-    String mpa_name;
+    int id;
+    String name;
 
-    public Mpa(int mpa_id, String mpa_name) {
-        this.mpa_id = mpa_id;
-        this.mpa_name = mpa_name;
+    public Mpa(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public int getMpa_id() {
-        return mpa_id;
+    public int getId() {
+        return id;
     }
 
-    public void setMpa_id(int mpa_id) {
-        this.mpa_id = mpa_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getMpa_name() {
-        return mpa_name;
+    public String getName() {
+        return name;
     }
 
-    public void setMpa_name(String mpa_name) {
-        this.mpa_name = mpa_name;
+    public void setName(String name) {
+        this.name = name;
     }
 }

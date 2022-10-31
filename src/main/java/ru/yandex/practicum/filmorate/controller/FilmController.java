@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.Objects;
 
 @Slf4j
 @RestController
-@RequestMapping("/films")
+//@RequestMapping("/films")
 public class FilmController {
     private final FilmService filmService;
     @Autowired
@@ -28,24 +27,27 @@ public class FilmController {
     @PostMapping("/films")
     public Film create(@Valid @RequestBody final Film film) throws FilmException, ValidationException, NotFoundException { //добавление фильма
         filmService.save(film);
-        log.info("Добавлен новый фильм " + film.getTitle() + " в коллекцию");
+        log.info("Добавлен новый фильм " + film.getName() + " в коллекцию");
+        System.out.println(film);
         return film;
     }
 
     @PutMapping("/films")
     public Film update(@Valid @RequestBody final Film film) throws FilmException, ValidationException, NotFoundException { //обновление фильма
         filmService.update(film);
-        log.info("Обновлен фильм " + film.getTitle());
+        log.info("Обновлен фильм " + film.getName());
         return film;
     }
 
-    @GetMapping("/films")
+    @GetMapping     ("/films")
     public List<Film> getAllFilms() { // получение всех фильмов
+        List<Film> films = filmService.getAllFilms();
+        System.out.println(films);
         log.info("Отправлен список всех фильмов");
-        return filmService.getAllFilms();
+        return films;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/films/{id}")
     public Film get(@PathVariable Integer id) throws NotFoundException {
         Film film = filmService.findById(id);
         if (Objects.nonNull(film)) {
