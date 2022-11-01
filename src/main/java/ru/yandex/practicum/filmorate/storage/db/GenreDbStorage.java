@@ -36,8 +36,7 @@ public class GenreDbStorage implements GenreStorage {
     @Override
     public List<Genre> getAll() {
         String sqlQuery = "SELECT  * FROM GENRES";
-        List<Genre> genres = jdbcTemplate.query(sqlQuery, GenreDbStorage::makeGenre);
-        return genres;
+        return jdbcTemplate.query(sqlQuery, GenreDbStorage::makeGenre);
     }
 
     @Override

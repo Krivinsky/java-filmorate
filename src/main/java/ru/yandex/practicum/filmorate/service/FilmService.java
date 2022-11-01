@@ -7,13 +7,14 @@ import ru.yandex.practicum.filmorate.exeption.FilmException;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.LikesStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.Collections;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -24,6 +25,10 @@ public class FilmService {
     public UserStorage userStorage;
     public GenreStorage genreStorage;
 
+    final static int MAX_NAME_SIZE = 200;
+
+    final static LocalDate DATE_OF_FIRST_FILM = LocalDate.of(1895,12,28);
+
     @Autowired
     public FilmService(FilmStorage filmStorage, UserStorage userStorage, GenreStorage genreStorage, LikesStorage likesStorage) {
         this.filmStorage = filmStorage;
@@ -32,19 +37,17 @@ public class FilmService {
         this.likesStorage = likesStorage;
     }
 
-    public List<Film> topTenFilms(Integer count) {
-        return filmStorage.topFilms(count);
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+        this.filmStorage = filmStorage;
+        this.userStorage = userStorage;
     }
 
     public Film findById(int id) throws NotFoundException {
-        //return filmStorage.findById(id);
         return  filmStorage.get(id);
     }
 
     public Film get (int filmId) throws NotFoundException {
-        final Film film = filmStorage.get(filmId);
-//        genreStorage.load(Collections.singletonList(film));
-        return film;
+        return filmStorage.get(filmId);
     }
 
     public List<Film> getAllFilms() {
@@ -53,11 +56,8 @@ public class FilmService {
         return films;
     }
 
-    public List<Film> findAllFilms() {
-        return filmStorage.getAllFilms();
-    }
-
     public Film update(Film film) throws ValidationException, FilmException, NotFoundException {
+        validate(film);
         final Film film1 = filmStorage.get(film.getId());
         validate(film);
         film.setRate(film1.getRate());
@@ -66,6 +66,7 @@ public class FilmService {
     }
 
     public Film add(Film film) throws ValidationException, FilmException {
+        validate(film);
         return filmStorage.add(film);
     }
 
@@ -87,16 +88,28 @@ public class FilmService {
         return films;
     }
 
-
-
-    public Film save (Film film) throws NotFoundException {
+    public Film save (Film film) throws NotFoundException, ValidationException {
+        validate(film);
         film.setRate(0);
         return filmStorage.save(film);
     }
 
-
-
-    protected void validate(Film film) {
-
+    public void validate(Film film) throws ValidationException {
+        if (film.getReleaseDate().isBefore(DATE_OF_FIRST_FILM)) {
+            throw new ValidationException("Ошибка в дате релиза фильма");
+        }
+        if (film.getName() == null || film.getName().isEmpty()) {
+            throw new ValidationException("Ошибка в названии фильма");
+        }
+        if (film.getDescription() != null && film.getDescription().length() > MAX_NAME_SIZE) {
+            throw new ValidationException("Ошибка в описании фильма");
+        }
+        if (film.getDuration() <= 0) {
+            throw new ValidationException("Ошибка в продолжительности фильма");
+        }
+        final Mpa mpa = film.getMpa();
+        if (mpa == null || mpa.getId() == 0) {
+            throw new ValidationException("Ошибка в MPA-рейтинге фильма");
+        }
     }
 }

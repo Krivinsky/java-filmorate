@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable int id) throws NotFoundException { //get()
+    public User findById(@PathVariable int id) throws NotFoundException {
         User user = userService.findById(id);
         if (Objects.isNull(user)) {
             throw new NotFoundException("Нет пользователя с таким ID");
@@ -71,7 +71,6 @@ public class UserController {
     @GetMapping("/{id}/friends")    //список пользователей, являющихся его друзьями
     public List<User> getFriends(@PathVariable int id) throws NotFoundException {
         List<User> friends = userService.getFriends(id);
-        System.out.println(friends);
         log.info("список друзей пользователя c ID=" + id + " : " + friends);
         return friends;
     }

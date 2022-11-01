@@ -92,14 +92,12 @@ public class UserDbStorage implements UserStorage {
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from PUBLIC.USERS where USER_ID = ?", userId);
         if (userRows.next()) {
             log.info("Найден пользователь: {} {}", userRows.getInt("user_id"), userRows.getString("login"));
-
-                User user = new User(
-                    userRows.getInt("user_id"),
-                    userRows.getString("email"),
-                    userRows.getString("login"),
-                    userRows.getString("name"),
-                    Objects.requireNonNull(userRows.getDate("birthday")).toLocalDate());
-            return user;
+            return new User(
+                userRows.getInt("user_id"),
+                userRows.getString("email"),
+                userRows.getString("login"),
+                userRows.getString("name"),
+                Objects.requireNonNull(userRows.getDate("birthday")).toLocalDate());
         } else {
             log.info("Пользователь с идентификатором {} не найден.", userId);
             return null;
@@ -107,20 +105,17 @@ public class UserDbStorage implements UserStorage {
     }
 
     public static User makeUser(ResultSet resultSet, int rowNum) throws SQLException {
-        User user = new User(
+        return new User(
             resultSet.getInt("USER_ID"),
             resultSet.getString("EMAIL"),
             resultSet.getString("LOGIN"),
             resultSet.getString("NAME"),
             resultSet.getDate("BIRTHDAY").toLocalDate()
         );
-        System.out.println(user);
-        return user;
     }
 
     @Override
     public void userValidate(User user) throws ValidationException {
-
         if (user.getEmail() == null || user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
             log.error("Ошибка в электронной почте пользователя");
             throw new ValidationException("Ошибка в электронной почте пользователя");

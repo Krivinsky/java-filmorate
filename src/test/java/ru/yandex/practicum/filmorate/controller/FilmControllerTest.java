@@ -23,7 +23,22 @@ class FilmControllerTest {
 
     @Test
     void add() {
+        Film film = new Film();
+        film.setReleaseDate(LocalDate.of(1795,1,1));
 
+
+        FilmStorage filmStorage = new InMemoryFilmStorage();
+        UserStorage userStorage = new InMemoryUserStorage();
+        FilmService filmService = new FilmService(filmStorage, userStorage);
+        UserService userService = new UserService(userStorage);
+
+        final ValidationException ex = assertThrows(
+                ValidationException.class,
+                () -> {
+                    FilmController filmController = new FilmController(filmService, userService);
+                    filmController.create(film);
+                });
+        assertEquals("Ошибка в дате релиза фильма", ex.getMessage());
     }
 
     @Test

@@ -26,7 +26,6 @@ public class MpaController {
     public Collection<Mpa> getAll() {
         List<Mpa> mpas = mpaService.getAll();
         log.info("Подучен список всех MPA");
-        System.out.println(mpas);
         return mpas;
     }
 

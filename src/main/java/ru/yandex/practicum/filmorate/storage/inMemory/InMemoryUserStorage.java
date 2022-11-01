@@ -13,7 +13,6 @@ import java.util.Map;
 
 
 @Slf4j
-//@Component
 public class InMemoryUserStorage implements UserStorage {
 
     protected int generateId = 0;
@@ -23,8 +22,8 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void save(User user) {
-
+    public void save(User user) throws ValidationException {
+        userValidate(user);
     }
 
     @Override

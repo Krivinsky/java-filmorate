@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
-//@Component
+
 public class InMemoryFilmStorage implements FilmStorage {
     final static int MAX_NAME_SIZE = 200;
 
@@ -30,12 +30,10 @@ public class InMemoryFilmStorage implements FilmStorage {
         return film;
     }
 
-//    @Override
     public void update(Film film) throws ValidationException, NotFoundException {
         filmValidate(film);
         if (film.getId() > 0 && film.getId() <= generateId) {
             films.put(film.getId(), film);
-            //return film;
         }
         throw new NotFoundException("Такого фильма не существует");
     }
@@ -50,7 +48,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         return new ArrayList<>(films.values());
     }
 
-    @Override
     public void filmValidate(Film film) throws ValidationException {
         if (film.getReleaseDate().isBefore(DATE_OF_FIRST_FILM)) {
             throw new ValidationException("Ошибка в дате релиза фильма");

@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -15,39 +16,38 @@ import java.util.Objects;
 
 @Slf4j
 @RestController
-//@RequestMapping("/films")
+@RequestMapping("/films")
 public class FilmController {
+
     private final FilmService filmService;
     @Autowired
-    public FilmController (FilmService filmService) {
+    public FilmController (FilmService filmService, UserService userService) {
         this.filmService = filmService;
     }
 
-
-    @PostMapping("/films")
+    @PostMapping
     public Film create(@Valid @RequestBody final Film film) throws FilmException, ValidationException, NotFoundException { //добавление фильма
+        filmService.validate(film);
         filmService.save(film);
         log.info("Добавлен новый фильм " + film.getName() + " в коллекцию");
-        System.out.println(film);
-        return film;
+        return filmService.get(film.getId());
     }
 
-    @PutMapping("/films")
+    @PutMapping
     public Film update(@Valid @RequestBody final Film film) throws FilmException, ValidationException, NotFoundException { //обновление фильма
         filmService.update(film);
         log.info("Обновлен фильм " + film.getName());
         return film;
     }
 
-    @GetMapping("/films")
+    @GetMapping
     public List<Film> getAllFilms() { // получение всех фильмов
         List<Film> films = filmService.getAllFilms();
-        System.out.println(films);
         log.info("Отправлен список всех фильмов");
         return films;
     }
 
-    @GetMapping("/films/{id}")
+    @GetMapping("/{id}")
     public Film get(@PathVariable Integer id) throws NotFoundException {
         Film film = filmService.get(id);
         if (Objects.nonNull(film)) {
@@ -59,19 +59,19 @@ public class FilmController {
         }
     }
 
-    @PutMapping("/films/{id}/like/{userId}")    // пользователь ставит лайк фильму
+    @PutMapping("/{id}/like/{userId}")    // пользователь ставит лайк фильму
     public void addLike (@PathVariable int id, @PathVariable int userId) throws NotFoundException {
         filmService.addLike(id, userId);
         log.info("пользователь с " + userId + "поставил лайк фильму " + id);
     }
 
-    @DeleteMapping ("/films/{id}/like/{userId}")    //  пользователь удаляет лайк
+    @DeleteMapping ("/{id}/like/{userId}")    //  пользователь удаляет лайк
     public void deleteLike(@PathVariable int id, @PathVariable int userId) throws NotFoundException {
         filmService.deleteLike(id, userId);
         log.info("пользователь с userID:" + userId + " удалил лайк у фильма c ID" + id);
     }
 
-    @GetMapping ("/films/popular")  // возвращает список из первых count фильмов по количеству лайков.
+    @GetMapping ("/popular")  // возвращает список из первых count фильмов по количеству лайков.
     public List<Film> getPopularFilm(@RequestParam (defaultValue = "10") int count) {
         log.info("Получен список самых популярных фильмов" + count);
         return filmService.getPopular(count);

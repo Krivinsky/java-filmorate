@@ -18,7 +18,22 @@ class UserControllerTest {
 
     @Test
     void create() {
+        User user = new User();
+        user.setId(1);
+        user.setLogin("login");
+        user.setName("name");
+        user.setBirthday(LocalDate.of(2000, 1,1));
 
+        InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
+        UserService userService = new UserService(inMemoryUserStorage);
+
+        final ValidationException ex = assertThrows(
+                ValidationException.class,
+                () -> {
+                    UserController userController = new UserController(userService);
+                    userController.create(user);
+                });
+        assertEquals("Ошибка в электронной почте пользователя", ex.getMessage());
     }
 
     @Test

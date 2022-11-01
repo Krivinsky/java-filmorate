@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendshipStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,6 +21,9 @@ public class UserService {
         this.friendshipStorage = friendshipStorage;
     }
 
+    public UserService(UserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
 
     //добавление в друзья
     public void addFriend(int id, int friendId) throws NotFoundException {
@@ -42,11 +44,7 @@ public class UserService {
 
     //вывод списка общих друзей
     public List<User> getMutualFriends(int id, int otherId) throws NotFoundException {
-        List<User> result = friendshipStorage.getCommonFriends(id, otherId);
-        User user1 = userStorage.findById(id);
-        User user2 = userStorage.findById(otherId);
-        System.out.println(result);
-        return result;
+        return friendshipStorage.getCommonFriends(id, otherId);
     }
 
     public User findById(int userId) throws NotFoundException {
@@ -62,13 +60,6 @@ public class UserService {
 
     public List<User> getFriends(int id) throws NotFoundException {
         User user = userStorage.findById(id);
-        List<User> friends = friendshipStorage.getFriends(user.getId());
-        return friends;
-    }
-
-
-
-    void validate(User user) {
-
+        return friendshipStorage.getFriends(user.getId());
     }
 }

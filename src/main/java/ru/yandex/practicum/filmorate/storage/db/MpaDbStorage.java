@@ -31,8 +31,7 @@ public class MpaDbStorage implements MpaStorage {
     @Override
     public List<Mpa> getAll() {
         String sqlQuery = "SELECT * FROM MPA";
-        List<Mpa> mpas = jdbcTemplate.query(sqlQuery, MpaDbStorage::makeMpa);
-        return mpas;
+        return jdbcTemplate.query(sqlQuery, MpaDbStorage::makeMpa);
     }
 
     private static Mpa makeMpa(ResultSet resultSet, int rowNum) throws SQLException {
@@ -41,6 +40,4 @@ public class MpaDbStorage implements MpaStorage {
                 resultSet.getString("MPA_NAME")
         );
     }
-
-
 }
