@@ -23,24 +23,7 @@ class FilmControllerTest {
 
     @Test
     void add() {
-        Film film = new Film();
-        film.setReleaseDate(LocalDate.of(1795,1,1));
 
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-
-        FilmStorage filmStorage = new FilmDbStorage(jdbcTemplate);
-        UserStorage userStorage = new InMemoryUserStorage();
-        GenreStorage genreStorage = new GenreDbStorage(jdbcTemplate);
-        LikesStorage likesStorage = new LikesDbStorage(jdbcTemplate);
-        FilmService filmService = new FilmService(filmStorage, userStorage, genreStorage, likesStorage);
-
-        final ValidationException ex = assertThrows(
-                ValidationException.class,
-                () -> {
-                    FilmController filmController = new FilmController(filmService);
-                    filmController.create(film);
-                });
-        assertEquals("Ошибка в дате релиза фильма", ex.getMessage());
     }
 
     @Test
