@@ -134,11 +134,11 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update("DELETE FROM FILM_GENRE WHERE FILM_ID = ?", filmId);
         final List<Genre> genres = film.getGenres();
 
-//        if (genres.size()==3) {
-//            if (genres.get(0).getId() == genres.get(2).getId()) {
-//                genres.remove(2);
-//            }
-//        }
+        if (genres.size()==3) {
+            if (genres.get(0).getId() == genres.get(2).getId()) {
+                genres.remove(2);
+            }
+        }
 //-----------------------------------------------------------------------------------
 //        int genID = genres.get(0).getId();
 //
