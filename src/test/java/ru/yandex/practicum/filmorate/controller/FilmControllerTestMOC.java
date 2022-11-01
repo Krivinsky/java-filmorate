@@ -35,6 +35,7 @@ public class FilmControllerTestMOC {
                 .andExpect(MockMvcResultMatchers.content().json("[]"));
     }
 
+    @Disabled
     @Test
     void create() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(PATH)
