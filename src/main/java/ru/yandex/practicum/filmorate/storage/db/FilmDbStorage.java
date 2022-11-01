@@ -134,15 +134,30 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update("DELETE FROM FILM_GENRE WHERE FILM_ID = ?", filmId);
         final List<Genre> genres = film.getGenres();
 
-        if (genres.size()==3) {
-            if (genres.get(0).getId() == genres.get(2).getId()) {
-                genres.remove(2);
-            }
-        }
+//        if (genres.size()==3) {
+//            if (genres.get(0).getId() == genres.get(2).getId()) {
+//                genres.remove(2);
+//            }
+//        }
+//-----------------------------------------------------------------------------------
+//        int genID = genres.get(0).getId();
+//
+//        List<Genre> copy = new ArrayList<>(genres);
+//        for (int i = 1; i < copy.size(); i++) {
+//            if (copy.get(i).getId() == genID) {
+//                genID = copy.get(i).getId();
+//                genres.remove(i);
+//            }
+//        }
+//        List<Genre> listDistinct = genres.stream().distinct().collect(Collectors.toList());  //не работает
+
+        Set <Genre> uniqueValues = new HashSet<>(genres);
+
+//--------------------------------------------------------------------------------
         if (genres == null || genres.isEmpty()) {
             return;
         }
-        final ArrayList<Genre> genreArrayList = new ArrayList<>(genres);
+        final ArrayList<Genre> genreArrayList = new ArrayList<>(uniqueValues);
         jdbcTemplate.batchUpdate("INSERT INTO FILM_GENRE(FILM_ID, GENRE_ID) values (?, ?)",
             new BatchPreparedStatementSetter() {
                 @Override
