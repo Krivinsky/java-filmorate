@@ -50,7 +50,7 @@ public class GenreDbStorage implements GenreStorage {
         jdbcTemplate.query(sqlQuery, (rs) -> {
             final Film film = filmById.get(rs.getInt("FILM_ID"));
             film.addGenre(makeGenre(rs, 0));
-        }, films.stream().map(FilmDbStorage::getId).toArray());  //todo
+        }, films.stream().map(Film::getId).toArray());
     }
 
     static Genre makeGenre(ResultSet resultSet, int rowNum) throws SQLException {

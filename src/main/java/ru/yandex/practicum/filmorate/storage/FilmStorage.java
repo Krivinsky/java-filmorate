@@ -14,7 +14,7 @@ public interface FilmStorage {
     List<Film> getAllFilms();
     void filmValidate(Film film) throws FilmException, ValidationException;
 
-    Film findById(int id);
+    //Film findById(int id);
 
     Film get(int filmId) throws NotFoundException;
 

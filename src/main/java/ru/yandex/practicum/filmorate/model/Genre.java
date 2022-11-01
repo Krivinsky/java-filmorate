@@ -1,27 +1,27 @@
 package ru.yandex.practicum.filmorate.model;
 
 public class Genre {
-    int genre_id;
-    String genre_name;
+    int id;
+    String name;
 
-    public Genre(int genre_id, String genre_name) {
-        this.genre_id = genre_id;
-        this.genre_name = genre_name;
+    public Genre(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public int getGenre_id() {
-        return genre_id;
+    public int getId() {
+        return id;
     }
 
-    public void setGenre_id(int genre_id) {
-        this.genre_id = genre_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getGenre_name() {
-        return genre_name;
+    public String getName() {
+        return name;
     }
 
-    public void setGenre_name(String genre_name) {
-        this.genre_name = genre_name;
+    public void setName(String name) {
+        this.name = name;
     }
 }

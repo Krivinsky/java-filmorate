@@ -59,7 +59,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User creat(User user) throws ValidationException {
+    public User creat(User user) {
         return null;
     }
 

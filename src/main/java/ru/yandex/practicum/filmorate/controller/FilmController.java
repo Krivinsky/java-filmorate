@@ -39,7 +39,7 @@ public class FilmController {
         return film;
     }
 
-    @GetMapping     ("/films")
+    @GetMapping("/films")
     public List<Film> getAllFilms() { // получение всех фильмов
         List<Film> films = filmService.getAllFilms();
         System.out.println(films);
@@ -49,7 +49,7 @@ public class FilmController {
 
     @GetMapping("/films/{id}")
     public Film get(@PathVariable Integer id) throws NotFoundException {
-        Film film = filmService.findById(id);
+        Film film = filmService.get(id);
         if (Objects.nonNull(film)) {
             log.info("Получен фильм " + id);
             return film;

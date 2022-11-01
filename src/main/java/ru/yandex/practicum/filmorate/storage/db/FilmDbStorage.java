@@ -19,9 +19,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -44,7 +44,10 @@ public class FilmDbStorage implements FilmStorage {
         String sqlQuery = "UPDATE FILMS SET TITLE = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, RATE = ?, MPA_ID = ? WHERE FILM_ID = ?";
         jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(),
                 film.getRate(), film.getMpa().getId(), film.getId());
+
+
         saveGenres(film);
+        //insertGenres(film); //-------------------------------------------------------------------------------------------------------------------
     }
 
     @Override
@@ -55,8 +58,9 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getAllFilms() {
-        String sqlQuery = "SELECT * FROM FILMS";
+        String sqlQuery = "SELECT * FROM FILMS F, MPA M WHERE F.MPA_ID = M.MPA_ID";
         List<Film> films = jdbcTemplate.query(sqlQuery, FilmDbStorage::makeFilm);
+
         return films;
     }
 
@@ -74,28 +78,26 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public void filmValidate(Film film) {
-
-    }
-
-    @Override
-    public Film findById(int film_id) {
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from PUBLIC.FILMS where FILM_ID = ?", film_id);
-        if (userRows.next()) {
-            Film film = new Film(
-
-            );
-        }
-        return null;
     }
 
     @Override
     public Film get(int filmId) throws NotFoundException {
-        final String dqlQuery = "SELECT * FROM FILMS F, MPA M WHERE F.MPA_ID = M.MPA_ID AND F.FILM_ID = ?";
+        String dqlQuery = "SELECT * FROM FILMS F, MPA M WHERE F.MPA_ID = M.MPA_ID AND F.FILM_ID = ?";
         final List<Film> films = jdbcTemplate.query(dqlQuery, FilmDbStorage::makeFilm, filmId);
         if (films.size() != 1) {
             throw new NotFoundException ("film_id = " + filmId);
         }
-        return films.get(0);
+        Film film = films.get(0);
+
+        dqlQuery =   "SELECT G2.* FROM FILM_GENRE FG " +
+                "INNER JOIN GENRES G2 on G2.GENRE_ID = FG.GENRE_ID AND FG.FILM_ID = ?";
+
+        List<Genre> genreList = jdbcTemplate.query(dqlQuery, (rs, rowNum) -> makeGenre(rs), filmId);
+        film.setGenres(genreList);
+
+        log.info("Get film id={}", film.getId());
+
+        return film;
     }
 
     @Override
@@ -103,7 +105,7 @@ public class FilmDbStorage implements FilmStorage {
         return null;
     }
 
-    //@Override
+
     public Film save(Film film) throws NotFoundException {
         String sqlQuery = "INSERT INTO FILMS (TITLE, DESCRIPTION, RELEASE_DATE, DURATION, RATE, MPA_ID) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
@@ -120,9 +122,9 @@ public class FilmDbStorage implements FilmStorage {
         }, keyHolder);
         film.setId(keyHolder.getKey().intValue());
 
-        System.out.println(film);
+        System.out.println(film); // удалить
 
-        saveGenres(film); // удалить
+        saveGenres(film);
 
         return get(film.getId());
     }
@@ -130,7 +132,13 @@ public class FilmDbStorage implements FilmStorage {
     private void saveGenres(Film film) {
         final Integer filmId = film.getId();
         jdbcTemplate.update("DELETE FROM FILM_GENRE WHERE FILM_ID = ?", filmId);
-        final Set<Genre> genres = film.getGenres(); //todo сделать метод
+        final List<Genre> genres = film.getGenres();
+
+        if (genres.size()==3) {
+            if (genres.get(0).getId() == genres.get(2).getId()) {
+                genres.remove(2);
+            }
+        }
         if (genres == null || genres.isEmpty()) {
             return;
         }
@@ -140,7 +148,7 @@ public class FilmDbStorage implements FilmStorage {
                 @Override
                 public void setValues(PreparedStatement ps, int i) throws SQLException {
                     ps.setInt(1, filmId);
-                    ps.setInt(2, genreArrayList.get(i).getGenre_id());
+                    ps.setInt(2, genreArrayList.get(i).getId());
                 }
 
                 @Override
@@ -149,9 +157,10 @@ public class FilmDbStorage implements FilmStorage {
                     }
             });
     }
-
-
-    public static int getId(Film film) {
-        return film.getId();
+    private Genre makeGenre(ResultSet resultSet) throws SQLException {
+        return new Genre(
+                resultSet.getInt("GENRE_ID"),
+                resultSet.getString("GENRE_NAME")
+        );
     }
 }

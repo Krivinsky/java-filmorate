@@ -36,8 +36,21 @@ public class FilmService {
         return filmStorage.topFilms(count);
     }
 
-    public Film findById(int id) {
-        return filmStorage.findById(id);
+    public Film findById(int id) throws NotFoundException {
+        //return filmStorage.findById(id);
+        return  filmStorage.get(id);
+    }
+
+    public Film get (int filmId) throws NotFoundException {
+        final Film film = filmStorage.get(filmId);
+//        genreStorage.load(Collections.singletonList(film));
+        return film;
+    }
+
+    public List<Film> getAllFilms() {
+        final List<Film> films = filmStorage.getAllFilms();
+        genreStorage.load(films);
+        return films;
     }
 
     public List<Film> findAllFilms() {
@@ -74,24 +87,16 @@ public class FilmService {
         return films;
     }
 
-    public List<Film> getAllFilms() {
-        final List<Film> films = filmStorage.getAllFilms();
-        genreStorage.load(films);
-        return films;
-    }
+
 
     public Film save (Film film) throws NotFoundException {
         film.setRate(0);
         return filmStorage.save(film);
     }
 
-    public Film get (int filmId) throws NotFoundException {
-        final Film film = filmStorage.get(filmId);
-        genreStorage.load(Collections.singletonList(film));
-        return film;
-    }
 
-    protected void validate(Film film) { //todo этот метод
+
+    protected void validate(Film film) {
 
     }
 }

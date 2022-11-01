@@ -10,8 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Data
@@ -36,8 +35,8 @@ public class Film {
     int rate;
 
     Mpa mpa;
-    @JsonIgnore
-    public Set<Genre> genres;
+
+    public List<Genre> genres = new ArrayList<>();
 
     public Film() {
     }
@@ -104,35 +103,17 @@ public class Film {
         return mpa;
     }
 
-
-
     public void setMpa(Mpa mpa) {
         this.mpa = mpa;
     }
 
-    @JsonIgnore
-    Set<Integer> likes = new HashSet<>(); //хранит userId пользователя лайк фильм
-
-    //добавление лайка
-    public void addLike(int userId) {
-        likes.add(userId);
-        rate = likes.size();
-    }
-
-    //удаление лайка
-    public void deleteLike(Integer userId) {
-        likes.remove(userId);
-        rate = likes.size();
-    }
-
-    public Set<Genre> getGenres() {
+    public List<Genre> getGenres() {
         return genres;
     }
 
     public void addGenre(Genre genre) {
         genres.add(genre);
     }
-
 
     @Override
     public String toString() {
