@@ -25,7 +25,7 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) throws ValidationException { //создание пользователя
-        userService.userStorage.creat(user);
+        userService.userStorage.save(user);
         log.info("Создан новый пользователь" + user.toString());
         return user;
     }
@@ -34,7 +34,7 @@ public class UserController {
     User update (@Valid @RequestBody User user) throws ValidationException, NotFoundException { //обновление пользователя
         userService.userStorage.update(user);
         if (Objects.nonNull(user)) {
-            log.info("Обновлен пользователь " + user.getName());
+            log.info("Обновлен пользователь " + user.toString());
             return user;
         }
         throw new ValidationException("Нет пользователя с таким ID");
@@ -43,7 +43,7 @@ public class UserController {
     @GetMapping
     public Collection<User> findAllUsers() {  //получение списка всех пользователей
         log.info("Отправлен список всех пользователей");
-        return userService.userStorage.findAllUsers();
+        return userService.userStorage.getAllUsers();
     }
 
     @GetMapping("/{id}")
@@ -52,7 +52,7 @@ public class UserController {
         if (Objects.isNull(user)) {
             throw new NotFoundException("Нет пользователя с таким ID");
         }
-        log.info("Получен пользователь " + id);
+        log.info("Получен пользователь : {} {} {}", user.getId(), user.getEmail(), user.getLogin());
         return user;
     }
 
@@ -64,17 +64,21 @@ public class UserController {
 
     @DeleteMapping("/{id}/friends/{friendId}")   //удаление из друзей
     public void deleteFriend(@PathVariable int id, @PathVariable int friendId) throws NotFoundException {
-        userService.deleteFriend(id, friendId);
+        log.info("Пользователь " + id + "удалил из друзей ользователя " + friendId);
+        userService.removeFriend(id, friendId);
     }
 
     @GetMapping("/{id}/friends")    //список пользователей, являющихся его друзьями
     public List<User> getFriends(@PathVariable int id) throws NotFoundException {
-        log.info("список друзей пользователя " + id + userService.getFriends(id));
-        return userService.getFriends(id);
+        List<User> friends = userService.getFriends(id);
+        log.info("список друзей пользователя c ID=" + id + " : " + friends);
+        return friends;
     }
 
     @GetMapping("/{id}/friends/common/{otherId}") // список друзей, общих с другим пользователем
     public List<User> getMutualFriends(@PathVariable int id, @PathVariable int otherId) throws NotFoundException {
-        return userService.getMutualFriends(id, otherId);
+        List<User> friends = userService.getMutualFriends(id, otherId);
+        log.info("список друзей пользователя c ID=" + id + " с пользователем c ID=" + otherId + " -- " + friends);
+        return friends;
     }
 }

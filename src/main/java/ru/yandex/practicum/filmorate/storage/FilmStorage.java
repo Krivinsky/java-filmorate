@@ -9,12 +9,13 @@ import java.util.List;
 
 public interface FilmStorage {
     Film add(Film film) throws FilmException, ValidationException;
-    Film update(Film film) throws FilmException, ValidationException, NotFoundException;
+    void update(Film film) throws FilmException, ValidationException, NotFoundException;
     void deleteFilm(Integer id);
-    List<Film> findAllFilms();
-    void filmValidate(Film film) throws FilmException, ValidationException;
+    List<Film> getAllFilms();
 
-    Film findById(int id);
+    Film get(int filmId) throws NotFoundException;
 
     List<Film> topFilms(int count);
+
+    Film save(Film film) throws NotFoundException;
 }

@@ -1,10 +1,10 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.inMemory;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -13,13 +13,22 @@ import java.util.Map;
 
 
 @Slf4j
-@Component
 public class InMemoryUserStorage implements UserStorage {
 
     protected int generateId = 0;
     private final Map<Integer, User> users = new HashMap<>();
     private int generateId() {
         return ++generateId;
+    }
+
+    @Override
+    public void save(User user) throws ValidationException {
+        userValidate(user);
+    }
+
+    @Override
+    public User get(int userId) throws NotFoundException {
+        return null;
     }
 
     @Override
@@ -46,7 +55,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Collection<User> findAllUsers() {
+    public Collection<User> getAllUsers() {
         return users.values();
     }
 

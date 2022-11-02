@@ -1,16 +1,16 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.inMemory;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
-@Component
+
 public class InMemoryFilmStorage implements FilmStorage {
     final static int MAX_NAME_SIZE = 200;
 
@@ -30,12 +30,10 @@ public class InMemoryFilmStorage implements FilmStorage {
         return film;
     }
 
-    @Override
-    public Film update(Film film) throws ValidationException, NotFoundException {
+    public void update(Film film) throws ValidationException, NotFoundException {
         filmValidate(film);
         if (film.getId() > 0 && film.getId() <= generateId) {
             films.put(film.getId(), film);
-            return film;
         }
         throw new NotFoundException("Такого фильма не существует");
     }
@@ -46,11 +44,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> findAllFilms() {
+    public List<Film> getAllFilms() {
         return new ArrayList<>(films.values());
     }
 
-    @Override
     public void filmValidate(Film film) throws ValidationException {
         if (film.getReleaseDate().isBefore(DATE_OF_FIRST_FILM)) {
             throw new ValidationException("Ошибка в дате релиза фильма");
@@ -66,9 +63,14 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
     }
 
-    @Override
+
     public Film findById(int id) {
         return films.get(id);
+    }
+
+    @Override
+    public Film get(int filmId) throws NotFoundException {
+        return null;
     }
 
     public List<Film> topFilms(int count) {
@@ -79,6 +81,11 @@ public class InMemoryFilmStorage implements FilmStorage {
         allFilms.sort(filmComparator);
 
         return allFilms;
+    }
+
+    @Override
+    public Film save(Film film) {
+        return null;
     }
 
     static class FilmComparator implements Comparator<Film> {

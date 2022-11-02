@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.inMemory.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -60,15 +61,6 @@ class InMemoryFilmStorageTest {
 
     @Test
     void topFilms() throws ValidationException {
-        film2.addLike(1);
-        film2.addLike(2);
-        film1.addLike(3);
-        inMemoryFilmStorage.add(film1);
-        inMemoryFilmStorage.add(film2);
 
-        List<Film> films = inMemoryFilmStorage.topFilms(10);
-
-        assertEquals(film2, films.get(0));
-        assertEquals(film1, films.get(1));
     }
 }
