@@ -2,129 +2,38 @@ package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-@Slf4j
+
 @Data
 @AllArgsConstructor
+@Builder
 public class Film {
 
-    int id;
+    Integer id;
 
     private String name;
 
     private String description;
 
-    LocalDate releaseDate;
+    private LocalDate releaseDate;
 
-    int duration;
+    private int duration;
 
-    @JsonIgnore
-    int rate;
+    private Integer rate;
 
-    Mpa mpa;
+    private final Set<Integer> likes = new HashSet<>();
 
-    public List<Genre> genres = new ArrayList<>();
+    private Mpa mpa;
 
-    public Film() {
-    }
-
-    public Film(int id, String name, String description, LocalDate releaseDate, int duration, int rate, Mpa mpa) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-        this.rate = rate;
-        this.mpa = mpa;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public int getRate() {
-        return rate;
-    }
-
-    public void setRate(int rate) {
-        this.rate = rate;
-    }
-
-    public Mpa getMpa() {
-        return mpa;
-    }
-
-    public void setMpa(Mpa mpa) {
-        this.mpa = mpa;
-    }
-
-    public List<Genre> getGenres() {
-        return genres;
-    }
+    private final LinkedHashSet<Genre> genres = new LinkedHashSet<>();
 
     public void addGenre(Genre genre) {
-        if (genres.isEmpty()) {
-            genres.add(genre);
-        } else {
-            for (Genre g : genres) {
-                if (g.getId() != genre.getId()) {
-                    genres.add(genre);
-                }
-            }
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Film{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", releaseDate=" + releaseDate +
-                ", duration=" + duration +
-                ", rate=" + rate +
-                '}';
+        genres.add(genre);
     }
 }
