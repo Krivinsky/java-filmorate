@@ -33,6 +33,10 @@ public class Film {
 
     private final LinkedHashSet<Genre> genres = new LinkedHashSet<>();
 
+    public Film() {
+
+    }
+
     public void addGenre(Genre genre) {
         genres.add(genre);
     }
