@@ -75,11 +75,6 @@ public class FilmDbStorage implements FilmStorage {
             throw new NotFoundException ("film_id = " + filmId);
         }
         Film film = films.get(0);
-        dqlQuery =   "SELECT G2.* FROM FILM_GENRE FG " +
-                "INNER JOIN GENRES G2 on G2.GENRE_ID = FG.GENRE_ID AND FG.FILM_ID = ?";
-        List<Genre> genreList = jdbcTemplate.query(dqlQuery, (rs, rowNum) -> makeGenre(rs), filmId);
-        film.setGenres(genreList);
-        log.info("Get film id={}", film.getId());
         return film;
     }
 
@@ -110,12 +105,8 @@ public class FilmDbStorage implements FilmStorage {
     private void saveGenres(Film film) {
         final Integer filmId = film.getId();
         jdbcTemplate.update("DELETE FROM FILM_GENRE WHERE FILM_ID = ?", filmId);
-        final List<Genre> genres = film.getGenres();
-        if (genres.size()==3) {
-            if (genres.get(0).getId() == genres.get(2).getId()) {
-                genres.remove(2);
-            }
-        }
+        final Set<Genre> genres = film.getGenres();
+
         if (genres == null || genres.isEmpty()) {
             return;
         }
@@ -133,12 +124,5 @@ public class FilmDbStorage implements FilmStorage {
                         return genreArrayList.size();
                     }
             });
-    }
-
-    private Genre makeGenre(ResultSet resultSet) throws SQLException {
-        return new Genre(
-                resultSet.getInt("GENRE_ID"),
-                resultSet.getString("GENRE_NAME")
-        );
     }
 }

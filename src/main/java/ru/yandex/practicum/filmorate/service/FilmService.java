@@ -15,6 +15,7 @@ import ru.yandex.practicum.filmorate.storage.LikesStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -42,12 +43,10 @@ public class FilmService {
         this.userStorage = userStorage;
     }
 
-    public Film findById(int id) throws NotFoundException {
-        return  filmStorage.get(id);
-    }
-
     public Film get (int filmId) throws NotFoundException {
-        return filmStorage.get(filmId);
+        final Film film = filmStorage.get(filmId);
+        genreStorage.load(Collections.singletonList(film));
+        return film;
     }
 
     public List<Film> getAllFilms() {
@@ -59,15 +58,9 @@ public class FilmService {
     public Film update(Film film) throws ValidationException, FilmException, NotFoundException {
         validate(film);
         final Film film1 = filmStorage.get(film.getId());
-        validate(film);
         film.setRate(film1.getRate());
         filmStorage.update(film);
-        return film;
-    }
-
-    public Film add(Film film) throws ValidationException, FilmException {
-        validate(film);
-        return filmStorage.add(film);
+        return get(film.getId());
     }
 
     public void addLike(int filmId, int userId) throws NotFoundException {
